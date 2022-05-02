@@ -9,6 +9,7 @@ on:
 env:
   AWS_REGION: ap-northeast-1
 
+# These permissions are needed to interact with GitHub's OIDC Token endpoint.
 permissions:
   id-token: write
   contents: write
@@ -18,13 +19,11 @@ jobs:
     name: Deploy app to AWS Fargate
     runs-on: ubuntu-latest
     steps:
-      # - name: Configure aws credentials for OIDC
+      - name: Configure aws credentials for OIDC
         #if: github.ref == 'refs/heads/main'
-      - uses: actions/checkout@v2
-      - uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION  }}
           role-session-name: GitHubActions-${{ github.run_id }}
-      - run: npm install
-      - run: npm run deploy
+        run: aws sts get-caller-identity  
