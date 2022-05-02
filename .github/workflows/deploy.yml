@@ -9,6 +9,10 @@ on:
 env:
   AWS_REGION: ap-northeast-1
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   deploy:
     name: Deploy app to AWS Fargate
