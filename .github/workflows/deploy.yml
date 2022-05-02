@@ -14,10 +14,13 @@ jobs:
     name: Deploy app to AWS Fargate
     runs-on: ubuntu-latest
     steps:
-      - name: Configure aws credentials for OIDC
+      # - name: Configure aws credentials for OIDC
         #if: github.ref == 'refs/heads/main'
-        uses: aws-actions/configure-aws-credentials@v1
+      - uses: actions/checkout@v2
+      - uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION  }}
-      - run: aws sts get-caller-identity
+          role-session-name: GitHubActions-${{ github.run_id }}
+      - run: npm install
+      - run: npm run deploy
