@@ -26,4 +26,5 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION  }}
           role-session-name: GitHubActions-${{ github.run_id }}
+      - name: get-caller-identity is allowed to run on role.
         run: aws sts get-caller-identity  
