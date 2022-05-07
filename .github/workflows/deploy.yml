@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - develop
 
 env:
   AWS_REGION: ap-northeast-1
@@ -24,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure aws credentials for OIDC
-        #if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
@@ -33,7 +32,7 @@ jobs:
           role-deuration-secounds: 1800
       
       - name: Set env vars for prod
-        #if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           echo "ENV_NAME=prod" >> $GITHUB_ENV
           echo "VPC_CIDR=172.31.0.0/16" >> $GITHUB_ENV
