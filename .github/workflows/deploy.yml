@@ -113,6 +113,14 @@ jobs:
 #            --overrides='{"containerOverrides":[{"name":"nginx", "command":["nginx", "-v"]},{"name":"php", "command":["php", "artisan", "migrate", "--force"]}]}'
 #        working-directory: ./ecspresso
 #
+
+      - name: Change s3 bucket policy
+        run:
+          - current_ip=${curl http://checkip.amazonaws.com/}
+          - aws s3api get-bucket-policy --bucket common-s3-bucket-tfstate --query Policy --output text > policy.json
+          - aws s3api put-bucket-policy --bucket common-s3-bucket-tfstate --policy file://tmp_policy.json
+        working-directory: ./ecspresso
+
       - name: Deploy to ecs
         run: ecspresso deploy --config config_$ENV_NAME.yaml --latest-task-definition
         working-directory: ./ecspresso
