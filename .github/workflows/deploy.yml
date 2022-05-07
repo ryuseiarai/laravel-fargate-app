@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - feature/push_images_to_ecr
+      - develop
 
 env:
   AWS_REGION: ap-northeast-1
@@ -33,7 +33,7 @@ jobs:
           role-deuration-secounds: 1800
       
       - name: Set env vars for prod
-        #if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           echo "ENV_NAME=prod" >> $GITHUB_ENV
           echo "VPC_CIDR=172.31.0.0/16" >> $GITHUB_ENV
@@ -96,11 +96,11 @@ jobs:
 #        run: aws s3 cp .env.$ENV_NAME s3://shonansurvivors-$SYSTEM_NAME-$ENV_NAME-$SERVICE_NAME-env-file/$IMAGE_TAG/.env
 #        working-directory: backend
 #
-#      - name: Download ecspresso
-#        uses: kayac/ecspresso@v0
-#        with:
-#          version: v1.5.3
-#
+      - name: Download ecspresso
+        uses: kayac/ecspresso@v0
+        with:
+          version: v1.5.3
+
 #      - name: Register task definition
 #        run: ecspresso register --config config_$ENV_NAME.yaml
 #        working-directory: ./ecspresso
@@ -113,6 +113,6 @@ jobs:
 #            --overrides='{"containerOverrides":[{"name":"nginx", "command":["nginx", "-v"]},{"name":"php", "command":["php", "artisan", "migrate", "--force"]}]}'
 #        working-directory: ./ecspresso
 #
-#      - name: Deploy to ecs
-#        run: ecspresso deploy --config config_$ENV_NAME.yaml --latest-task-definition
-#        working-directory: ./ecspresso
+      - name: Deploy to ecs
+        run: ecspresso deploy --config config_$ENV_NAME.yaml --latest-task-definition
+        working-directory: ./ecspresso
