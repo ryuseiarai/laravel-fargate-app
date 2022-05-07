@@ -114,19 +114,6 @@ jobs:
 #        working-directory: ./ecspresso
 #
 
-      - name: Get Github action IP
-        id: ip
-        uses: haythem/public-ip@v1.2
-
-      - name: set current_ip
-        run: echo current_ip=${{ steps.ip.outputs.ipv4 }}
-
-      - name: Change s3 bucket policy
-        run: |
-          aws s3api get-bucket-policy --bucket common-s3-bucket-tfstate --query Policy --output text > policy.json
-          aws s3api put-bucket-policy --bucket common-s3-bucket-tfstate --policy file://tmp_policy.json
-        working-directory: ./ecspresso
-
       - name: Deploy to ecs
         run: ecspresso deploy --config config_$ENV_NAME.yaml --latest-task-definition
         working-directory: ./ecspresso
